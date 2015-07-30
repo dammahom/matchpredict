@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from gameapi.models import UserProfile
+from gameapi.models import *
 
 
 class UserCreationForm(forms.ModelForm):
@@ -41,6 +41,33 @@ class UserChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 
+class TeamInline(admin.TabularInline):
+    model = Team
+    extra = 3
+
+
+class HomeMatchInline(admin.TabularInline):
+    model = Match
+    fk_name = 'Team1'
+    extra = 3
+
+
+class AwayMatchInline(admin.TabularInline):
+    model = Match
+    fk_name = 'Team2'
+    extra = 3
+
+
+class CommentInline(admin.TabularInline):
+    model = Comment
+    extra = 3
+
+
+class PredictInline(admin.TabularInline):
+    model = Predict
+    extra = 3
+
+
 class MyUserAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
@@ -60,6 +87,70 @@ class MyUserAdmin(UserAdmin):
     search_fields = ('username',)
     ordering = ('username',)
     filter_horizontal = ()
+    inlines = [CommentInline, PredictInline]
+
+
+class LeagueAdmin(admin.ModelAdmin):
+    list_display = ('name', 'country')
+    fieldsets = (
+        (None, {'fields': ('name',)}),
+        ('other info', {'fields': ('country',)}),
+    )
+    search_fields = ('name',)
+    ordering = ('name', 'country')
+    list_filter = ('country',)
+    inlines = [TeamInline]
+
+
+class TeamAdmin(admin.ModelAdmin):
+    list_display = ('name', 'rank', 'league')
+    fieldsets = (
+        (None, {'fields': ('name',)}),
+        ('League info', {'fields': ('league', 'rank',)}),
+    )
+    search_fields = ('name',)
+    ordering = ('name', 'rank', 'league')
+    list_filter = ('league',)
+    inlines = [HomeMatchInline, AwayMatchInline]
+
+
+class MatchAdmin(admin.ModelAdmin):
+    list_display = ('definition', 'date', 'Team1', 'Team2')
+    fieldsets = (
+        (None, {'fields': ('definition', 'date',)}),
+        ('Home and Away Team', {'fields': ('Team1', 'Team2',)}),
+    )
+    search_fields = ('definition',)
+    ordering = ('definition', 'Team1', 'Team2', 'date',)
+    list_filter = ('date',)
+    inlines = [CommentInline, PredictInline]
+
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('content', 'author', 'match', 'is_approved')
+    fieldsets = (
+        (None, {'fields': ('content', 'author', 'match', 'is_approved')}),
+    )
+    search_fields = ('content',)
+    ordering = ('content', 'author', 'match',)
+    list_filter = ('author', 'match')
+
+
+class PredictAdmin(admin.ModelAdmin):
+    list_display = ('user', 'match', 'goals1', 'goals2',)
+    fieldsets = (
+        (None, {'fields': ('user', 'match',)}),
+        ('Goals', {'fields': ('goals1', 'goals2',)}),
+    )
+    search_fields = ('user',)
+    ordering = ('user', 'match',)
+    list_filter = ('match', 'user')
+
 
 admin.site.register(UserProfile, MyUserAdmin)
+admin.site.register(League, LeagueAdmin)
+admin.site.register(Team, TeamAdmin)
+admin.site.register(Match, MatchAdmin)
+admin.site.register(Comment, CommentAdmin)
+admin.site.register(Predict, PredictAdmin)
 admin.site.unregister(Group)

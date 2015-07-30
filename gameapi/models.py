@@ -86,12 +86,13 @@ class Match(models.Model):
     Team2 = models.ForeignKey(Team, related_name='matchs_team2')
 
     def __str__(self):
-        return self.definition
+        return self.Team1.name + ' vs ' + self.Team2.name
 
 
 class Comment(models.Model):
     content = models.CharField(max_length=255)
     author = models.ForeignKey(UserProfile, related_name='comments')
+    match = models.ForeignKey(Match, related_name='matchcomments')
     is_approved = models.BooleanField(default=False)
 
 
