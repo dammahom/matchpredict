@@ -72,6 +72,63 @@
       <primary-key name="PRIMARY" columns="session_key"/>
       <index name="django_session_de54fa62" unique="false" columns="expire_date"/>
     </table>
+    <table name="gameapi_comment" schema="" catalog="game_db" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="content" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="is_approved" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="author_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="match_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="gameapi_com_author_id_27fc5b7786c3c1e5_fk_gameapi_userprofile_id" columns="author_id" ref-table="gameapi_userprofile" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="gameapi_comment_match_id_5b3265386527ba5_fk_gameapi_match_id" columns="match_id" ref-table="gameapi_match" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="gameapi_comment_4f331e2f" unique="false" columns="author_id"/>
+      <index name="gameapi_comment_ff9c4e4a" unique="false" columns="match_id"/>
+    </table>
+    <table name="gameapi_league" schema="" catalog="game_db" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="country" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="gameapi_team_league_id_50e8daefdcc551a4_fk_gameapi_league_id" table="gameapi_team" schema="" catalog="game_db" columns="league_id"/>
+    </table>
+    <table name="gameapi_match" schema="" catalog="game_db" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="definition" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="created_at" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="Team1_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="Team2_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="gameapi_match_Team1_id_3b70952e783c05ea_fk_gameapi_team_id" columns="Team1_id" ref-table="gameapi_team" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="gameapi_match_Team2_id_39f4e9a50c382223_fk_gameapi_team_id" columns="Team2_id" ref-table="gameapi_team" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="gameapi_comment_match_id_5b3265386527ba5_fk_gameapi_match_id" table="gameapi_comment" schema="" catalog="game_db" columns="match_id"/>
+      <exported-key name="gameapi_predict_match_id_7fa10e634d1ad614_fk_gameapi_match_id" table="gameapi_predict" schema="" catalog="game_db" columns="match_id"/>
+      <index name="gameapi_match_2efa4692" unique="false" columns="Team2_id"/>
+      <index name="gameapi_match_6bca262b" unique="false" columns="Team1_id"/>
+    </table>
+    <table name="gameapi_predict" schema="" catalog="game_db" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="goals1" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="goals2" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="match_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="gameapi_predi_user_id_42726147f29bd4d3_fk_gameapi_userprofile_id" columns="user_id" ref-table="gameapi_userprofile" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="gameapi_predict_match_id_7fa10e634d1ad614_fk_gameapi_match_id" columns="match_id" ref-table="gameapi_match" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="gameapi_predict_e8701ad4" unique="false" columns="user_id"/>
+      <index name="gameapi_predict_match_id_7fa10e634d1ad614_fk_gameapi_match_id" unique="false" columns="match_id"/>
+    </table>
+    <table name="gameapi_team" schema="" catalog="game_db" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="rank" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="league_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="gameapi_team_league_id_50e8daefdcc551a4_fk_gameapi_league_id" columns="league_id" ref-table="gameapi_league" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="gameapi_match_Team1_id_3b70952e783c05ea_fk_gameapi_team_id" table="gameapi_match" schema="" catalog="game_db" columns="Team1_id"/>
+      <exported-key name="gameapi_match_Team2_id_39f4e9a50c382223_fk_gameapi_team_id" table="gameapi_match" schema="" catalog="game_db" columns="Team2_id"/>
+      <index name="gameapi_team_league_id_50e8daefdcc551a4_fk_gameapi_league_id" unique="false" columns="league_id"/>
+    </table>
     <table name="gameapi_userprofile" schema="" catalog="game_db" type="TABLE">
       <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
       <column name="password" sqlType="VARCHAR" precision="128" scale="0" nullable="false" jdbcType="12"/>
@@ -85,8 +142,77 @@
       <column name="updated_at" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
       <primary-key name="PRIMARY" columns="id"/>
       <exported-key name="django_admin_l_user_id_99ce743b9f497ed_fk_gameapi_userprofile_id" table="django_admin_log" schema="" catalog="game_db" columns="user_id"/>
+      <exported-key name="gameapi_com_author_id_27fc5b7786c3c1e5_fk_gameapi_userprofile_id" table="gameapi_comment" schema="" catalog="game_db" columns="author_id"/>
+      <exported-key name="gameapi_predi_user_id_42726147f29bd4d3_fk_gameapi_userprofile_id" table="gameapi_predict" schema="" catalog="game_db" columns="user_id"/>
+      <exported-key name="oauth2_provid_user_id_739f403fce55acb2_fk_gameapi_userprofile_id" table="oauth2_provider_accesstoken" schema="" catalog="game_db" columns="user_id"/>
+      <exported-key name="oauth2_provid_user_id_7c5ebae403cb3821_fk_gameapi_userprofile_id" table="oauth2_provider_application" schema="" catalog="game_db" columns="user_id"/>
+      <exported-key name="oauth2_provid_user_id_7cdd55d4a9dbd465_fk_gameapi_userprofile_id" table="oauth2_provider_grant" schema="" catalog="game_db" columns="user_id"/>
+      <exported-key name="oauth2_provide_user_id_daabe497cb248e1_fk_gameapi_userprofile_id" table="oauth2_provider_refreshtoken" schema="" catalog="game_db" columns="user_id"/>
       <index name="email" unique="true" columns="email"/>
       <index name="username" unique="true" columns="username"/>
+    </table>
+    <table name="oauth2_provider_accesstoken" schema="" catalog="game_db" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="token" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="expires" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="scope" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="application_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="cbff341b43b3dbf07113a943167bed2a" columns="application_id" ref-table="oauth2_provider_application" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="oauth2_provid_user_id_739f403fce55acb2_fk_gameapi_userprofile_id" columns="user_id" ref-table="gameapi_userprofile" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="D19805eb259b44c35a4bd2e88a65f313" table="oauth2_provider_refreshtoken" schema="" catalog="game_db" columns="access_token_id"/>
+      <index name="cbff341b43b3dbf07113a943167bed2a" unique="false" columns="application_id"/>
+      <index name="oauth2_provid_user_id_739f403fce55acb2_fk_gameapi_userprofile_id" unique="false" columns="user_id"/>
+      <index name="oauth2_provider_accesstoken_94a08da1" unique="false" columns="token"/>
+    </table>
+    <table name="oauth2_provider_application" schema="" catalog="game_db" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="client_id" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="redirect_uris" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="client_type" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
+      <column name="authorization_grant_type" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
+      <column name="client_secret" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="skip_authorization" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="oauth2_provid_user_id_7c5ebae403cb3821_fk_gameapi_userprofile_id" columns="user_id" ref-table="gameapi_userprofile" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="cbff341b43b3dbf07113a943167bed2a" table="oauth2_provider_accesstoken" schema="" catalog="game_db" columns="application_id"/>
+      <exported-key name="D56c772429212d93288282a03fc4115d" table="oauth2_provider_grant" schema="" catalog="game_db" columns="application_id"/>
+      <exported-key name="D11e89b0337ef8706dc9cd16ff497d5a" table="oauth2_provider_refreshtoken" schema="" catalog="game_db" columns="application_id"/>
+      <index name="client_id" unique="true" columns="client_id"/>
+      <index name="oauth2_provid_user_id_7c5ebae403cb3821_fk_gameapi_userprofile_id" unique="false" columns="user_id"/>
+      <index name="oauth2_provider_application_9d667c2b" unique="false" columns="client_secret"/>
+    </table>
+    <table name="oauth2_provider_grant" schema="" catalog="game_db" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="code" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="expires" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="redirect_uri" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="scope" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="application_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="D56c772429212d93288282a03fc4115d" columns="application_id" ref-table="oauth2_provider_application" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="oauth2_provid_user_id_7cdd55d4a9dbd465_fk_gameapi_userprofile_id" columns="user_id" ref-table="gameapi_userprofile" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="D56c772429212d93288282a03fc4115d" unique="false" columns="application_id"/>
+      <index name="oauth2_provid_user_id_7cdd55d4a9dbd465_fk_gameapi_userprofile_id" unique="false" columns="user_id"/>
+      <index name="oauth2_provider_grant_c1336794" unique="false" columns="code"/>
+    </table>
+    <table name="oauth2_provider_refreshtoken" schema="" catalog="game_db" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="token" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="access_token_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="application_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="D11e89b0337ef8706dc9cd16ff497d5a" columns="application_id" ref-table="oauth2_provider_application" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="D19805eb259b44c35a4bd2e88a65f313" columns="access_token_id" ref-table="oauth2_provider_accesstoken" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="oauth2_provide_user_id_daabe497cb248e1_fk_gameapi_userprofile_id" columns="user_id" ref-table="gameapi_userprofile" ref-schema="" ref-catalog="game_db" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="D11e89b0337ef8706dc9cd16ff497d5a" unique="false" columns="application_id"/>
+      <index name="oauth2_provide_user_id_daabe497cb248e1_fk_gameapi_userprofile_id" unique="false" columns="user_id"/>
+      <index name="oauth2_provider_refreshtoken_94a08da1" unique="false" columns="token"/>
     </table>
   </data-source>
 </component>
