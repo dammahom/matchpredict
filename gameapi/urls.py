@@ -10,27 +10,15 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
         model = UserProfile
 
 
-class LeagueSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = League
-
-
 class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
 
-class LeagueViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, TokenHasScope]
-    required_scopes = ['leagues']
-    queryset = League.objects.all()
-    serializer_class = League
-
-
 router = routers.DefaultRouter()
 router.register(r'users', UserProfileViewSet)
-router.register(r'leagues', LeagueViewSet)
+# router.register(r'leagues', views.league_list)
 
 urlpatterns = [
     url(r'^index', views.index),
@@ -38,4 +26,6 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^leagues/$', views.LeagueList.as_view()),
+    url(r'^leagues/(?P<pk>[0-9]+)/$', views.LeagueDetail.as_view()),
 ]
